@@ -25,8 +25,20 @@ export default function Register() {
         <GuestLayout>
             <Head title="Register" />
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} className="m-4">
                 <div>
+                    <h1 className="text-4xl font-bold text-center mb-2 text-indigo-600">
+                        Crear Cuenta
+                    </h1>
+                    <p className=" mb-2 text-sm text-center font-normal text-gray-500">
+                        ¿Ya tienes cuenta?{" "}
+                        <Link
+                            href={route("login")}
+                            className="text-indigo-600 hover:underline"
+                        >
+                            Acceder
+                        </Link>
+                    </p>
                     <InputLabel htmlFor="name" value="Nombre" />
 
                     <TextInput

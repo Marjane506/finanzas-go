@@ -31,8 +31,20 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             )}
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} className="m-4">
                 <div>
+                    <h1 className="text-4xl font-bold text-center mb-2 text-indigo-600">
+                        Inciar sesión
+                    </h1>
+                    <p className=" mb-2 text-sm text-center font-normal text-gray-500">
+                        ¿Eres nuevo?{" "}
+                        <Link
+                            href={route("register")}
+                            className="text-indigo-600 hover:underline"
+                        >
+                            Regístrate
+                        </Link>
+                    </p>
                     <InputLabel htmlFor="email" value="Email" />
 
                     <TextInput
