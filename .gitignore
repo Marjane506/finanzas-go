@@ -1,0 +1,42 @@
+# Laravel
+/vendor
+/node_modules
+.env
+.env.backup
+.phpunit.result.cache
+.storage/**/framework/cache/data
+/storage/**/logs/*.log
+/storage/**/app/public
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/cache/*
+/bootstrap/cache/*.php
+/public/storage
+/public/hot
+/public/build
+
+# Composer
+composer.lock
+
+# NPM / Yarn
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# IDEs
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+
+# MacOS
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vite
+vite.config.ts.timestamp*
+vite.config.js.timestamp*
