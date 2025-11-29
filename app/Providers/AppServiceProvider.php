@@ -2,24 +2,28 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Vite;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Auth\Events\Registered;
+use App\Listeners\CreateDefaultCategories;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class EventServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * The event to listener mappings for the application.
+     *
+     * @var array<class-string, array<int, class-string>>
      */
-    public function register(): void
-    {
-        //
-    }
+    protected $listen = [
+        Registered::class => [
+            CreateDefaultCategories::class,
+        ],
+    ];
 
     /**
-     * Bootstrap any application services.
+     * Register any events for your application.
      */
     public function boot(): void
     {
-        Vite::prefetch(concurrency: 3);
+        //
     }
 }

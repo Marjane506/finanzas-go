@@ -13,6 +13,18 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    public function setBudget(Request $request)
+    {
+        $data = $request->validate([
+            'monto_inicial' => 'required|numeric|min:0',
+        ]);
+
+        $user = auth()->user();
+        $user->budget = $data['monto_inicial'];
+        $user->save();
+
+        return redirect()->route('categorias.index');
+    }
     /**
      * Display the user's profile form.
      */
