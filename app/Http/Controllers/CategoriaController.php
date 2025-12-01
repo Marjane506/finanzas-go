@@ -13,7 +13,6 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        // dd(auth()->user());
         $user = auth()->user();
 
         return Inertia::render('Categorias', [
@@ -21,7 +20,7 @@ class CategoriaController extends Controller
                 ->where('user_id', auth()->id())
                 ->get(),
 
-            'presupuesto' => $user->budget,
+
         ]);
     }
 

@@ -7,9 +7,9 @@ import ModalNuevaCategoria from "../Components/Categoria/ModalNuevaCategoria";
 import ModalSubcategoria from "../Components/Subcategoria/ModalSubcategoria";
 import ModalEditarCategoria from "../Components/Categoria/ModalEditarCategoria";
 import PanelSubcategoriaDetalle from "../Components/Subcategoria/PanelSubcategoriaDetalle";
+import MiniPresupuesto from "../Components/Presupuesto/MiniPresupuesto";
 
-export default function Categorias({ categorias, presupuesto }) {
-    // Estado local para expandir/cerrar categorías
+export default function Categorias({ categorias, presupuestoActual }) {
     const [expanded, setExpanded] = useState(
         categorias.reduce((acc, cat) => {
             acc[cat.id] = true;
@@ -24,53 +24,43 @@ export default function Categorias({ categorias, presupuesto }) {
         }));
     };
 
-    // Modal: Nueva categoría
     const [modalCat, setModalCat] = useState(false);
-
-    // Modal: Subcategoria
     const [subSeleccionada, setSubSeleccionada] = useState(null);
 
-    // Modal: Editar categoría
     const [editModal, setEditModal] = useState({
         open: false,
         categoria: null,
     });
 
-    // Modal: Nueva subcategoría
     const [modalSub, setModalSub] = useState({
         open: false,
         parentId: null,
     });
 
-    // Crear categoría
     const addCategoria = (data) => {
         router.post("/categorias", data, {
             onSuccess: () => setModalCat(false),
         });
     };
 
-    // Editar categoría
     const updateCategoria = (id, data) => {
         router.put(`/categorias/${id}`, data, {
             onSuccess: () => setEditModal({ open: false, categoria: null }),
         });
     };
 
-    // Eliminar categoría
     const deleteCategoria = (id) => {
         if (confirm("¿Eliminar esta categoría?")) {
             router.delete(`/categorias/${id}`);
         }
     };
 
-    // Crear subcategoría
     const addSubcategoria = (parentId, data) => {
         router.post(
             "/subcategorias",
             { ...data, categoria_id: parentId },
             {
                 onSuccess: () => {
-                    // expandir automaticamente
                     setExpanded((prev) => ({
                         ...prev,
                         [parentId]: true,
@@ -81,6 +71,7 @@ export default function Categorias({ categorias, presupuesto }) {
             }
         );
     };
+
     const deleteSubcategoria = (id) => {
         if (confirm("¿Eliminar esta subcategoría?")) {
             router.delete(`/subcategorias/${id}`);
@@ -90,11 +81,11 @@ export default function Categorias({ categorias, presupuesto }) {
     return (
         <AuthenticatedLayout>
             <div className="max-w-7xl mx-auto p-6">
+                <MiniPresupuesto presupuestoActual={presupuestoActual} />
+
                 <div className="grid grid-cols-3 gap-6">
-                    {/* IZQUIERDA */}
                     <div className="col-span-2">
                         <div className="bg-white p-6 rounded-xl shadow max-w-3xl mx-auto">
-                            {/* HEADER DENTRO DEL PANEL */}
                             <div className="flex justify-between items-center mb-4 border-b pb-3">
                                 <h1 className="text-2xl font-bold text-gray-800">
                                     Categorías
@@ -136,14 +127,12 @@ export default function Categorias({ categorias, presupuesto }) {
                         </div>
                     </div>
 
-                    {/* DERECHA */}
                     <div className="col-span-1">
                         {subSeleccionada && (
                             <PanelSubcategoriaDetalle sub={subSeleccionada} />
                         )}
                     </div>
 
-                    {/* MODALES */}
                     <ModalNuevaCategoria
                         open={modalCat}
                         onClose={() => setModalCat(false)}

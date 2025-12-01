@@ -19,6 +19,15 @@ export default function AuthenticatedLayout({ header, children }) {
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                {/* CATEGORÍAS */}
+                                <NavLink
+                                    href={route("categorias")}
+                                    active={route().current("categorias")}
+                                >
+                                    Categorias
+                                </NavLink>
+
+                                {/* DASHBOARD */}
                                 <NavLink
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
@@ -73,6 +82,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
                         </div>
 
+                        {/* MOBILE MENU */}
                         <div className="-me-2 flex items-center sm:hidden">
                             <button
                                 onClick={() =>
@@ -116,6 +126,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
                 </div>
 
+                {/* MOBILE MENU CONTENT */}
                 <div
                     className={
                         (showingNavigationDropdown ? "block" : "hidden") +
@@ -128,6 +139,13 @@ export default function AuthenticatedLayout({ header, children }) {
                             active={route().current("dashboard")}
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            href={route("categorias")}
+                            active={route().current("categorias")}
+                        >
+                            Categorías
                         </ResponsiveNavLink>
                     </div>
 
@@ -143,14 +161,14 @@ export default function AuthenticatedLayout({ header, children }) {
 
                         <div className="mt-3 space-y-1">
                             <ResponsiveNavLink href={route("profile.edit")}>
-                                Profile
+                                Perfil
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"
                                 href={route("logout")}
                                 as="button"
                             >
-                                Log Out
+                                Cerrar sesión
                             </ResponsiveNavLink>
                         </div>
                     </div>
@@ -168,7 +186,10 @@ export default function AuthenticatedLayout({ header, children }) {
             <main>
                 {children}
 
-                {user && user.budget === null && <BudgetOverlay user={user} />}
+                {/* MOSTRAR OVERLAY SI NO HAY PRESUPUESTO */}
+                {user && !user.presupuestoActual && (
+                    <BudgetOverlay user={user} />
+                )}
             </main>
         </div>
     );

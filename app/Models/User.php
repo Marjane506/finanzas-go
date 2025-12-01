@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\HistorialPresupuesto;
+
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Notifications\Notifiable;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -44,5 +47,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function historialPresupuestos()
+    {
+        return $this->hasMany(HistorialPresupuesto::class);
+    }
+
+    public function presupuestoActual()
+    {
+        return $this->hasOne(HistorialPresupuesto::class)->latestOfMany();
     }
 }

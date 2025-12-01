@@ -9,7 +9,7 @@ export default function BudgetOverlay({ userId }) {
     const handleSave = () => {
         if (!monto) return;
 
-        router.post("/presupuesto-general", {
+        router.post("/presupuesto_inicial", {
             monto_inicial: monto,
         });
     };

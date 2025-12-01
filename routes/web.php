@@ -2,47 +2,38 @@
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\SubcategoriaController;
 
 Route::get('/', function () {
     return Inertia::render('Auth/Login');
 })->name('home');
 
+Route::get('/categorias', [CategoriaController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('categorias');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+
+    // PERFIL
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    //BUDGETOVERLAY
-    Route::post('/presupuesto-general', [ProfileController::class, 'setBudget'])
-        ->middleware(['auth'])
-        ->name('user.setBudget');
+    // PRESUPUESTO
+    Route::post('/presupuesto', [PresupuestoController::class, 'store'])
+        ->name('presupuesto.store');
 
-    //PRESUPUESTO
+    Route::post('/presupuesto/reiniciar', [PresupuestoController::class, 'reiniciar'])
+        ->name('presupuesto.reiniciar');
 
-    Route::get('/presupuesto', function () {
-        $user = auth()->user();
-
-        return Inertia::render('Presupuesto', [
-            'presupuesto' => $user->budget ? [
-                'monto_inicial' => $user->budget,
-                'saldo_actual'  => $user->budget // por ahora el mismo valor
-            ] : null,
-            'auth' => ['user' => $user]
-        ]);
-    })->middleware(['auth'])->name('presupuesto');
-
-
-
-    //CATEGORíAS
-    Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
+    // CATEGORÍAS CRUD
     Route::post('/categorias', [CategoriaController::class, 'store'])->name('categorias.store');
     Route::delete('/categorias/{categoria}', [CategoriaController::class, 'destroy'])->name('categorias.destroy');
 

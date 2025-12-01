@@ -3,15 +3,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { router } from "@inertiajs/react";
 import BudgetImg from "../../assets/mujerynino.jpg";
 
-export default function BudgetOverlay({ user }) {
+export default function BudgetOverlay({ presupuestoActual }) {
     const [monto, setMonto] = useState("");
 
-    // Si el usuario YA tiene presupuesto → NO mostrar overlay
-    if (user.budget !== null) return null;
+    // Si el usuario YA TIENE un presupuesto en la tabla historial → no mostrar overlay
+    if (presupuestoActual !== null) return null;
 
     const handleSave = () => {
         if (!monto) return;
 
+        // Guardar presupuesto inicial EN LA TABLA historial_presupuestos
         router.post("/presupuesto-general", { monto_inicial: monto });
     };
 
