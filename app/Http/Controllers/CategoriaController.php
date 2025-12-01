@@ -12,6 +12,7 @@ class CategoriaController extends Controller
      * Mostrar todas las categorías del usuario.
      */
     public function index()
+
     {
         $user = auth()->user();
 
@@ -19,8 +20,6 @@ class CategoriaController extends Controller
             'categorias' => Categoria::with('subcategorias')
                 ->where('user_id', auth()->id())
                 ->get(),
-
-
         ]);
     }
 

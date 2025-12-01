@@ -51,11 +51,11 @@ class User extends Authenticatable
 
     public function historialPresupuestos()
     {
-        return $this->hasMany(HistorialPresupuesto::class);
+        return $this->hasMany(HistorialPresupuesto::class, 'user_id');
     }
 
     public function presupuestoActual()
     {
-        return $this->hasOne(HistorialPresupuesto::class)->latestOfMany();
+        return $this->hasOne(HistorialPresupuesto::class, 'user_id')->latestOfMany();
     }
 }

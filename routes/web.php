@@ -11,6 +11,10 @@ Route::get('/', function () {
     return Inertia::render('Auth/Login');
 })->name('home');
 
+//Route::get('/test-overlay', function () {
+//    return Inertia::render('TestOverlay');
+//});
+
 Route::get('/categorias', [CategoriaController::class, 'index'])
     ->middleware(['auth'])
     ->name('categorias');
@@ -27,6 +31,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // PRESUPUESTO
+    Route::post('/presupuesto_inicial', [PresupuestoController::class, 'storeInicial'])
+        ->name('presupuesto.inicial');
+
     Route::post('/presupuesto', [PresupuestoController::class, 'store'])
         ->name('presupuesto.store');
 

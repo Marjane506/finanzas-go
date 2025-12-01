@@ -2,28 +2,41 @@
 
 namespace App\Providers;
 
-use Illuminate\Auth\Events\Registered;
-use App\Listeners\CreateDefaultCategories;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
-class EventServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
 {
     /**
-     * The event to listener mappings for the application.
-     *
-     * @var array<class-string, array<int, class-string>>
+     * Register any application services.
      */
-    protected $listen = [
-        Registered::class => [
-            CreateDefaultCategories::class,
-        ],
-    ];
+    public function register(): void
+    {
+        //
+    }
 
     /**
-     * Register any events for your application.
+     * Bootstrap any application services.
      */
     public function boot(): void
     {
-        //
+        Inertia::share([
+            'auth' => function () {
+                return [
+                    'user' => auth()->user(),
+                ];
+            },
+
+            'presupuestoActual' => function () {
+                if (!auth()->check()) {
+                    return null;
+                }
+
+                return auth()->user()
+                    ->historialPresupuestos()
+                    ->latest()
+                    ->first();
+            },
+        ]);
     }
 }

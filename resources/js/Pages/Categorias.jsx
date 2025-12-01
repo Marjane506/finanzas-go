@@ -8,8 +8,20 @@ import ModalSubcategoria from "../Components/Subcategoria/ModalSubcategoria";
 import ModalEditarCategoria from "../Components/Categoria/ModalEditarCategoria";
 import PanelSubcategoriaDetalle from "../Components/Subcategoria/PanelSubcategoriaDetalle";
 import MiniPresupuesto from "../Components/Presupuesto/MiniPresupuesto";
+import { usePage } from "@inertiajs/react";
+import BudgetOverlay from "@/Components/BudgetOverlay";
 
 export default function Categorias({ categorias, presupuestoActual }) {
+    const page = usePage().props;
+
+    if (!presupuestoActual) {
+        return (
+            <AuthenticatedLayout>
+                <BudgetOverlay user={page.auth.user} />
+            </AuthenticatedLayout>
+        );
+    }
+
     const [expanded, setExpanded] = useState(
         categorias.reduce((acc, cat) => {
             acc[cat.id] = true;
@@ -82,7 +94,6 @@ export default function Categorias({ categorias, presupuestoActual }) {
         <AuthenticatedLayout>
             <div className="max-w-7xl mx-auto p-6">
                 <MiniPresupuesto presupuestoActual={presupuestoActual} />
-
                 <div className="grid grid-cols-3 gap-6">
                     <div className="col-span-2">
                         <div className="bg-white p-6 rounded-xl shadow max-w-3xl mx-auto">

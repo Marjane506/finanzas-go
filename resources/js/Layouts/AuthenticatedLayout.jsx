@@ -3,11 +3,12 @@ import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import BudgetOverlay from "@/Components/BudgetOverlay";
-import { Link, usePage } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function AuthenticatedLayout({ header, children }) {
-    const user = usePage().props.auth.user;
+    const page = usePage().props;
+    const user = page.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -37,6 +38,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
                         </div>
 
+                        {/* USER MENU */}
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
                             <div className="relative ms-3">
                                 <Dropdown>
@@ -87,7 +89,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             <button
                                 onClick={() =>
                                     setShowingNavigationDropdown(
-                                        (previousState) => !previousState
+                                        (prev) => !prev
                                     )
                                 }
                                 className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
@@ -126,7 +128,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
                 </div>
 
-                {/* MOBILE MENU CONTENT */}
+                {/* MOBILE CONTENT */}
                 <div
                     className={
                         (showingNavigationDropdown ? "block" : "hidden") +
@@ -135,17 +137,17 @@ export default function AuthenticatedLayout({ header, children }) {
                 >
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route("dashboard")}
-                            active={route().current("dashboard")}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-
-                        <ResponsiveNavLink
                             href={route("categorias")}
                             active={route().current("categorias")}
                         >
                             Categorías
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            href={route("dashboard")}
+                            active={route().current("dashboard")}
+                        >
+                            Dashboard
                         </ResponsiveNavLink>
                     </div>
 
@@ -183,14 +185,9 @@ export default function AuthenticatedLayout({ header, children }) {
                 </header>
             )}
 
-            <main>
-                {children}
+            <main>{children}</main>
 
-                {/* MOSTRAR OVERLAY SI NO HAY PRESUPUESTO */}
-                {user && !user.presupuestoActual && (
-                    <BudgetOverlay user={user} />
-                )}
-            </main>
+            {!page.presupuestoActual && <BudgetOverlay user={user} />}
         </div>
     );
 }
