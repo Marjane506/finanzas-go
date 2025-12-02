@@ -58,4 +58,24 @@ class User extends Authenticatable
     {
         return $this->hasOne(HistorialPresupuesto::class, 'user_id')->latestOfMany();
     }
+    public function movimientos()
+    {
+        return $this->hasMany(Movimiento::class);
+    }
+
+    public function gastosDelMes()
+    {
+        return $this->movimientos()
+            ->where('tipo', 'gasto')
+            ->whereMonth('created_at', now()->month)
+            ->sum('cantidad');
+    }
+
+    public function ingresosDelMes()
+    {
+        return $this->movimientos()
+            ->where('tipo', 'ingreso')
+            ->whereMonth('created_at', now()->month)
+            ->sum('cantidad');
+    }
 }

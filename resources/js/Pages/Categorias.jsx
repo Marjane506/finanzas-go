@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { router } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { PlusCircle } from "lucide-react";
+
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import CategoriaItem from "../Components/Categoria/CategoriaItem";
 import ModalNuevaCategoria from "../Components/Categoria/ModalNuevaCategoria";
@@ -8,26 +9,12 @@ import ModalSubcategoria from "../Components/Subcategoria/ModalSubcategoria";
 import ModalEditarCategoria from "../Components/Categoria/ModalEditarCategoria";
 import PanelSubcategoriaDetalle from "../Components/Subcategoria/PanelSubcategoriaDetalle";
 import MiniPresupuesto from "../Components/Presupuesto/MiniPresupuesto";
-import { usePage } from "@inertiajs/react";
-import BudgetOverlay from "@/Components/BudgetOverlay";
 
-export default function Categorias({ categorias, presupuestoActual }) {
-    const page = usePage().props;
+export default function Categorias({ gastos, ingresos, presupuestoActual }) {
+    // Overlay ya lo maneja AuthenticatedLayout → no repetir aquí
 
-    if (!presupuestoActual) {
-        return (
-            <AuthenticatedLayout>
-                <BudgetOverlay user={page.auth.user} />
-            </AuthenticatedLayout>
-        );
-    }
-
-    const [expanded, setExpanded] = useState(
-        categorias.reduce((acc, cat) => {
-            acc[cat.id] = true;
-            return acc;
-        }, {})
-    );
+    // Estado para expandir categorías
+    const [expanded, setExpanded] = useState({});
 
     const toggleExpand = (id) => {
         setExpanded((prev) => ({
@@ -77,23 +64,17 @@ export default function Categorias({ categorias, presupuestoActual }) {
                         ...prev,
                         [parentId]: true,
                     }));
-
                     setModalSub({ open: false, parentId: null });
                 },
             }
         );
     };
 
-    const deleteSubcategoria = (id) => {
-        if (confirm("¿Eliminar esta subcategoría?")) {
-            router.delete(`/subcategorias/${id}`);
-        }
-    };
-
     return (
         <AuthenticatedLayout>
             <div className="max-w-7xl mx-auto p-6">
                 <MiniPresupuesto presupuestoActual={presupuestoActual} />
+
                 <div className="grid grid-cols-3 gap-6">
                     <div className="col-span-2">
                         <div className="bg-white p-6 rounded-xl shadow max-w-3xl mx-auto">
@@ -111,7 +92,12 @@ export default function Categorias({ categorias, presupuestoActual }) {
                                 </button>
                             </div>
 
-                            {categorias.map((cat) => (
+                            {/* GASTOS */}
+                            <h2 className="text-xl font-bold text-gray-700 mb-2">
+                                Gastos
+                            </h2>
+
+                            {gastos.map((cat) => (
                                 <CategoriaItem
                                     key={cat.id}
                                     categoria={{
@@ -129,7 +115,35 @@ export default function Categorias({ categorias, presupuestoActual }) {
                                         setEditModal({ open: true, categoria })
                                     }
                                     onDelete={deleteCategoria}
-                                    onDeleteSub={deleteSubcategoria}
+                                    onSelectSub={(sub) =>
+                                        setSubSeleccionada(sub)
+                                    }
+                                />
+                            ))}
+
+                            {/* INGRESOS */}
+                            <h2 className="text-xl font-bold text-gray-700 mt-6 mb-2">
+                                Ingresos
+                            </h2>
+
+                            {ingresos.map((cat) => (
+                                <CategoriaItem
+                                    key={cat.id}
+                                    categoria={{
+                                        ...cat,
+                                        expanded: expanded[cat.id],
+                                    }}
+                                    onToggleExpand={toggleExpand}
+                                    onAddSub={(id) =>
+                                        setModalSub({
+                                            open: true,
+                                            parentId: id,
+                                        })
+                                    }
+                                    onEdit={(categoria) =>
+                                        setEditModal({ open: true, categoria })
+                                    }
+                                    onDelete={deleteCategoria}
                                     onSelectSub={(sub) =>
                                         setSubSeleccionada(sub)
                                     }

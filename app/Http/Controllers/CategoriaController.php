@@ -8,40 +8,43 @@ use Inertia\Inertia;
 
 class CategoriaController extends Controller
 {
-    /**
-     * Mostrar todas las categorías del usuario.
-     */
     public function index()
-
     {
-        $user = auth()->user();
+        $userId = auth()->id();
 
         return Inertia::render('Categorias', [
-            'categorias' => Categoria::with('subcategorias')
-                ->where('user_id', auth()->id())
+
+            // 🔥 Categorías de gasto
+            'gastos' => Categoria::where('user_id', $userId)
+                ->where('tipo', 'gasto')
+                ->with('subcategorias')
                 ->get(),
+
+            // 🔥 Categorías de ingreso
+            'ingresos' => Categoria::where('user_id', $userId)
+                ->where('tipo', 'ingreso')
+                ->with('subcategorias')
+                ->get(),
+
+            // 🔥 Presupuesto
+            'presupuestoActual' => auth()->user()->presupuestoActual,
         ]);
     }
 
-    /**
-     * Guardar una nueva categoría.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'tipo' => 'required|in:gasto,ingreso',
         ]);
 
         $validated['user_id'] = auth()->id();
 
         Categoria::create($validated);
 
-        return redirect()->back()->with('success', 'Categoría creada');
+        return redirect()->back();
     }
 
-    /**
-     * Actualizar categoría.
-     */
     public function update(Request $request, Categoria $categoria)
     {
         if ($categoria->user_id !== auth()->id()) {
@@ -54,21 +57,17 @@ class CategoriaController extends Controller
 
         $categoria->update($validated);
 
-        return redirect()->back()->with('success', 'Categoría actualizada');
+        return redirect()->back();
     }
 
-    /**
-     * Eliminar una categoría.
-     */
     public function destroy(Categoria $categoria)
     {
-
         if ($categoria->user_id !== auth()->id()) {
             abort(403);
         }
 
         $categoria->delete();
 
-        return redirect()->back()->with('success', 'Categoría eliminada');
+        return redirect()->back();
     }
 }

@@ -17,20 +17,29 @@ class Subcategoria extends Model
         'categoria_id',
 
     ];
-
-    /**
-     * Relación: la subcategoría pertenece a una categoría
-     */
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);
     }
-
-    /**
-     * Relación: la subcategoría pertenece a un usuario
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function movimientos()
+    {
+        return $this->hasMany(Movimiento::class);
+    }
+    public function totalGastado()
+    {
+        return $this->movimientos()
+            ->where('tipo', 'gasto')
+            ->sum('cantidad');
+    }
+
+    public function totalIngresos()
+    {
+        return $this->movimientos()
+            ->where('tipo', 'ingreso')
+            ->sum('cantidad');
     }
 }

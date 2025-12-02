@@ -1,11 +1,12 @@
 import Modal from "@/Components/Modal";
-import { Trash2, Edit } from "lucide-react";
+import { Trash2, Edit, PlusCircle } from "lucide-react";
 
 export default function ModalDetalleSubcategoria({
     open,
     sub,
     onClose,
     onDelete,
+    onAddMovimiento, // 🔥 NUEVO
 }) {
     if (!sub) return null;
 
@@ -16,16 +17,28 @@ export default function ModalDetalleSubcategoria({
 
                 <div className="text-gray-700">
                     <p>
-                        <strong>Tipo:</strong> {sub.type}
+                        <strong>Tipo:</strong> {sub.tipo ?? "—"}
                     </p>
                     <p>
-                        <strong>Valor:</strong> {sub.value} €
+                        <strong>Valor:</strong> {sub.valor ?? 0} €
                     </p>
                     <p>
-                        <strong>Fecha:</strong> {sub.date}
+                        <strong>Fecha:</strong> {sub.date ?? "—"}
                     </p>
                 </div>
 
+                {/* 🔥 NUEVA ACCIÓN */}
+                <div className="mt-4">
+                    <button
+                        onClick={() => onAddMovimiento(sub.id)}
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center gap-2 hover:bg-green-700"
+                    >
+                        <PlusCircle size={18} />
+                        Añadir movimiento
+                    </button>
+                </div>
+
+                {/* ACCIONES ORIGINALES */}
                 <div className="flex justify-end gap-3 pt-4">
                     <button
                         className="px-4 py-2 bg-red-500 text-white rounded-lg flex items-center gap-2"

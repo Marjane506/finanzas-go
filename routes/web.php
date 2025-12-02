@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\MovimientoController;
 use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\SubcategoriaController;
 
@@ -48,6 +49,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/subcategorias', [SubcategoriaController::class, 'store'])->name('subcategorias.store');
     Route::put('/subcategorias/{subcategoria}', [SubcategoriaController::class, 'update'])->name('subcategorias.update');
     Route::delete('/subcategorias/{subcategoria}', [SubcategoriaController::class, 'destroy'])->name('subcategorias.destroy');
+    //MOVIMIENTOS
+    Route::post('/movimientos', [MovimientoController::class, 'store'])
+        ->middleware('auth')
+        ->name('movimientos.store');
 });
 
 require __DIR__ . '/auth.php';

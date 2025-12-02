@@ -1,12 +1,10 @@
-import React from "react";
-
 export default function MiniPresupuesto({ presupuestoActual }) {
     if (!presupuestoActual) return null;
 
-    const monto_inicial = presupuestoActual.monto_inicial;
-    const saldo_final = presupuestoActual.saldo_final;
+    const monto = presupuestoActual.monto_inicial;
+    const saldo = presupuestoActual.saldo_final;
 
-    const porcentaje = (saldo_final / monto_inicial) * 100;
+    const porcentaje = (saldo / monto) * 100;
 
     return (
         <div className="bg-white border border-gray-200 p-4 rounded-xl shadow mb-6">
@@ -14,9 +12,7 @@ export default function MiniPresupuesto({ presupuestoActual }) {
                 <span className="text-gray-600 font-medium">
                     Presupuesto del mes
                 </span>
-                <span className="text-indigo-600 font-bold">
-                    {saldo_final} €
-                </span>
+                <span className="text-indigo-600 font-bold">{saldo} €</span>
             </div>
 
             {/* Barra */}
