@@ -48,7 +48,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+    public function categorias()
+    {
+        return $this->hasMany(Categoria::class, 'user_id');
+    }
     public function historialPresupuestos()
     {
         return $this->hasMany(HistorialPresupuesto::class, 'user_id');

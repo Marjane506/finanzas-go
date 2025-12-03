@@ -53,6 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/movimientos', [MovimientoController::class, 'store'])
         ->middleware('auth')
         ->name('movimientos.store');
+    Route::delete('/movimientos/{movimiento}', [MovimientoController::class, 'destroy']);
+    Route::put('/movimientos/{movimiento}', [MovimientoController::class, 'update']);
 });
 
 require __DIR__ . '/auth.php';

@@ -1,39 +1,40 @@
 import Modal from "@/Components/Modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { router } from "@inertiajs/react";
 
-export default function ModalMovimiento({ open, onClose, subcategoriaId }) {
+export default function ModalEditarMovimiento({ open, onClose, movimiento }) {
     const [tipo, setTipo] = useState("gasto");
     const [cantidad, setCantidad] = useState("");
 
-    const enviar = () => {
-        if (!cantidad) return;
+    useEffect(() => {
+        if (movimiento) {
+            setTipo(movimiento.tipo);
+            setCantidad(movimiento.cantidad);
+        }
+    }, [movimiento]);
 
-        router.post(
-            "/movimientos",
-            {
-                tipo,
-                cantidad,
-                subcategoria_id: subcategoriaId,
-            },
+    const enviar = () => {
+        router.put(
+            `/movimientos/${movimiento.id}`,
+            { tipo, cantidad },
             {
                 preserveScroll: true,
                 onSuccess: () => {
                     router.reload({ only: ["sub"] });
-                    setCantidad("");
-                    setTipo("gasto");
                     onClose();
                 },
             }
         );
     };
 
+    if (!movimiento) return null;
+
     return (
         <Modal show={open} onClose={onClose}>
             <div className="p-6 space-y-4">
-                <h2 className="text-xl font-semibold">Nuevo movimiento</h2>
+                <h2 className="text-xl font-semibold">Editar movimiento</h2>
 
-                <div className="space-y-2">
+                <div>
                     <label className="text-gray-700 font-medium">Tipo</label>
                     <select
                         value={tipo}
@@ -45,7 +46,7 @@ export default function ModalMovimiento({ open, onClose, subcategoriaId }) {
                     </select>
                 </div>
 
-                <div className="space-y-2">
+                <div>
                     <label className="text-gray-700 font-medium">
                         Cantidad
                     </label>
@@ -54,20 +55,18 @@ export default function ModalMovimiento({ open, onClose, subcategoriaId }) {
                         value={cantidad}
                         onChange={(e) => setCantidad(e.target.value)}
                         className="w-full border rounded-lg p-2"
-                        placeholder="0 €"
                     />
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4">
+                <div className="flex justify-end gap-3">
                     <button
-                        className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
+                        className="px-4 py-2 bg-gray-300 rounded-lg"
                         onClick={onClose}
                     >
                         Cancelar
                     </button>
-
                     <button
-                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg"
                         onClick={enviar}
                     >
                         Guardar

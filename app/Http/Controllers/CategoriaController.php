@@ -3,31 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Subcategoria;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CategoriaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $userId = auth()->id();
 
-        return Inertia::render('Categorias', [
+        $subId = $request->query('sub');
+        $subSeleccionada = null;
 
-            // 🔥 Categorías de gasto
+        if ($subId) {
+            $subSeleccionada = Subcategoria::with('movimientos')
+                ->withSum(['movimientos as total_gastado' => function ($q) {
+                    $q->where('tipo', 'gasto');
+                }], 'cantidad')
+                ->withSum(['movimientos as total_ingresos' => function ($q) {
+                    $q->where('tipo', 'ingreso');
+                }], 'cantidad')
+                ->find($subId);
+        }
+
+        return Inertia::render('Categorias', [
             'gastos' => Categoria::where('user_id', $userId)
                 ->where('tipo', 'gasto')
                 ->with('subcategorias')
                 ->get(),
 
-            // 🔥 Categorías de ingreso
             'ingresos' => Categoria::where('user_id', $userId)
                 ->where('tipo', 'ingreso')
                 ->with('subcategorias')
                 ->get(),
 
-            // 🔥 Presupuesto
             'presupuestoActual' => auth()->user()->presupuestoActual,
+
+            'sub' => $subSeleccionada,
         ]);
     }
 

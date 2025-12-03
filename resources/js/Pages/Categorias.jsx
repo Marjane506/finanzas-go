@@ -11,10 +11,9 @@ import PanelSubcategoriaDetalle from "../Components/Subcategoria/PanelSubcategor
 import MiniPresupuesto from "../Components/Presupuesto/MiniPresupuesto";
 
 export default function Categorias({ gastos, ingresos, presupuestoActual }) {
-    // Overlay ya lo maneja AuthenticatedLayout → no repetir aquí
-
-    // Estado para expandir categorías
     const [expanded, setExpanded] = useState({});
+    const { props } = usePage();
+    const subSeleccionada = props.sub;
 
     const toggleExpand = (id) => {
         setExpanded((prev) => ({
@@ -24,13 +23,10 @@ export default function Categorias({ gastos, ingresos, presupuestoActual }) {
     };
 
     const [modalCat, setModalCat] = useState(false);
-    const [subSeleccionada, setSubSeleccionada] = useState(null);
-
     const [editModal, setEditModal] = useState({
         open: false,
         categoria: null,
     });
-
     const [modalSub, setModalSub] = useState({
         open: false,
         parentId: null,
@@ -72,12 +68,19 @@ export default function Categorias({ gastos, ingresos, presupuestoActual }) {
 
     return (
         <AuthenticatedLayout>
-            <div className="max-w-7xl mx-auto p-6">
-                <MiniPresupuesto presupuestoActual={presupuestoActual} />
+            <div className="w-full p-6">
+                {/* GRID PRINCIPAL DE 3 COLUMNAS */}
+                <div className="grid grid-cols-12 gap-6 w-full">
+                    {/* 🔵 IZQUIERDA (MiniPresupuesto) */}
+                    <div className="col-span-3">
+                        <MiniPresupuesto
+                            presupuestoActual={presupuestoActual}
+                        />
+                    </div>
 
-                <div className="grid grid-cols-3 gap-6">
-                    <div className="col-span-2">
-                        <div className="bg-white p-6 rounded-xl shadow max-w-3xl mx-auto">
+                    {/* 🟣 CENTRO (Categorías) */}
+                    <div className="col-span-6">
+                        <div className="bg-white p-6 rounded-xl shadow w-full">
                             <div className="flex justify-between items-center mb-4 border-b pb-3">
                                 <h1 className="text-2xl font-bold text-gray-800">
                                     Categorías
@@ -116,7 +119,11 @@ export default function Categorias({ gastos, ingresos, presupuestoActual }) {
                                     }
                                     onDelete={deleteCategoria}
                                     onSelectSub={(sub) =>
-                                        setSubSeleccionada(sub)
+                                        router.get(
+                                            `/categorias?sub=${sub.id}`,
+                                            {},
+                                            { preserveState: true }
+                                        )
                                     }
                                 />
                             ))}
@@ -145,47 +152,51 @@ export default function Categorias({ gastos, ingresos, presupuestoActual }) {
                                     }
                                     onDelete={deleteCategoria}
                                     onSelectSub={(sub) =>
-                                        setSubSeleccionada(sub)
+                                        router.get(
+                                            `/categorias?sub=${sub.id}`,
+                                            {},
+                                            { preserveState: true }
+                                        )
                                     }
                                 />
                             ))}
                         </div>
                     </div>
 
-                    <div className="col-span-1">
+                    {/* 🟢 DERECHA (PanelSubcategoriaDetalle) */}
+                    <div className="col-span-3">
                         {subSeleccionada && (
                             <PanelSubcategoriaDetalle sub={subSeleccionada} />
                         )}
                     </div>
-
-                    <ModalNuevaCategoria
-                        open={modalCat}
-                        onClose={() => setModalCat(false)}
-                        onSave={addCategoria}
-                    />
-
-                    <ModalEditarCategoria
-                        open={editModal.open}
-                        categoria={editModal.categoria}
-                        onClose={() =>
-                            setEditModal({ open: false, categoria: null })
-                        }
-                        onSave={(data) =>
-                            updateCategoria(editModal.categoria.id, {
-                                name: data.name,
-                            })
-                        }
-                    />
-
-                    <ModalSubcategoria
-                        open={modalSub.open}
-                        parentId={modalSub.parentId}
-                        onClose={() =>
-                            setModalSub({ open: false, parentId: null })
-                        }
-                        onSave={addSubcategoria}
-                    />
                 </div>
+
+                {/* MODALES */}
+                <ModalNuevaCategoria
+                    open={modalCat}
+                    onClose={() => setModalCat(false)}
+                    onSave={addCategoria}
+                />
+
+                <ModalEditarCategoria
+                    open={editModal.open}
+                    categoria={editModal.categoria}
+                    onClose={() =>
+                        setEditModal({ open: false, categoria: null })
+                    }
+                    onSave={(data) =>
+                        updateCategoria(editModal.categoria.id, {
+                            name: data.name,
+                        })
+                    }
+                />
+
+                <ModalSubcategoria
+                    open={modalSub.open}
+                    parentId={modalSub.parentId}
+                    onClose={() => setModalSub({ open: false, parentId: null })}
+                    onSave={addSubcategoria}
+                />
             </div>
         </AuthenticatedLayout>
     );

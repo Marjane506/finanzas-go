@@ -15,20 +15,18 @@ class Subcategoria extends Model
         'name',
         'icon',
         'categoria_id',
-
     ];
+
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);
     }
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
     public function movimientos()
     {
         return $this->hasMany(Movimiento::class);
     }
+
     public function totalGastado()
     {
         return $this->movimientos()

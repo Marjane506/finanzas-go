@@ -13,9 +13,25 @@ class Movimiento extends Model
         'cantidad',
     ];
 
+    protected $casts = [
+        'cantidad' => 'decimal:2',
+    ];
+
     public function subcategoria()
     {
         return $this->belongsTo(Subcategoria::class);
+    }
+
+    public function categoria() // ← Útil para acceder directo
+    {
+        return $this->hasOneThrough(
+            Categoria::class,
+            Subcategoria::class,
+            'id',
+            'id',
+            'subcategoria_id',
+            'categoria_id'
+        );
     }
 
     public function user()

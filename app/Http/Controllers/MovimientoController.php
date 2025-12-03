@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movimiento;
+use App\Models\Subcategoria;
 use Illuminate\Http\Request;
 
 class MovimientoController extends Controller
@@ -17,12 +18,19 @@ class MovimientoController extends Controller
 
         $user = auth()->user();
 
-        Movimiento::create([
+        $subcategoria = Subcategoria::findOrFail($request->subcategoria_id);
+
+        if ($subcategoria->categoria->user_id !== $user->id) {
+            abort(403, 'No puedes usar una subcategoría que no es tuya.');
+        }
+
+        $movimiento = Movimiento::create([
             'user_id' => $user->id,
-            'subcategoria_id' => $request->subcategoria_id,
-            'tipo' => 'gasto',
+            'subcategoria_id' => $subcategoria->id,
+            'tipo' => $request->tipo,
             'cantidad' => $request->cantidad,
         ]);
+
 
         $presupuesto = $user->presupuestoActual;
 
@@ -34,6 +42,31 @@ class MovimientoController extends Controller
 
         $presupuesto->save();
 
-        return back()->with('success', 'Movimiento registrado!');
+        return redirect()->back()->with('success', 'Movimiento registrado!');
+    }
+    public function destroy(Movimiento $movimiento)
+    {
+        if ($movimiento->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $movimiento->delete();
+
+        return back()->with('success', 'Movimiento eliminado');
+    }
+    public function update(Request $request, Movimiento $movimiento)
+    {
+        if ($movimiento->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'tipo' => 'required|in:gasto,ingreso',
+            'cantidad' => 'required|numeric|min:0.01',
+        ]);
+
+        $movimiento->update($data);
+
+        return back()->with('success', 'Movimiento actualizado');
     }
 }

@@ -19,4 +19,27 @@ class HistorialPresupuesto extends Model
         'fecha_inicio',
         'fecha_fin',
     ];
+
+    protected $casts = [
+        'monto_inicial' => 'decimal:2',
+        'saldo_final' => 'decimal:2',
+        'fecha_inicio' => 'date',
+        'fecha_fin' => 'date',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Ejemplos de scopes útiles
+    public function scopeDelAno($query)
+    {
+        return $query->whereYear('fecha_inicio', now()->year);
+    }
+
+    public function scopeActual($query)
+    {
+        return $query->latest('fecha_inicio');
+    }
 }

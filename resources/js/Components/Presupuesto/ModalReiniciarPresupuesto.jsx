@@ -8,11 +8,23 @@ export default function ModalReiniciarPresupuesto({ open, onClose }) {
     const enviar = () => {
         if (!monto) return;
 
-        router.post(route("presupuesto.reiniciar"), {
-            nuevo_monto: monto,
-        });
+        router.post(
+            route("presupuesto.reiniciar"),
+            { nuevo_monto: monto },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Actualiza solo el presupuestoActual sin recargar la página entera
+                    router.reload({ only: ["presupuestoActual"] });
 
-        onClose();
+                    // Cierra el modal
+                    onClose();
+
+                    // Limpia el campo
+                    setMonto("");
+                },
+            }
+        );
     };
 
     if (!open) return null;
