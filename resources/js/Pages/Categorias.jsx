@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { router, usePage } from "@inertiajs/react";
 import { PlusCircle } from "lucide-react";
-
+import BudgetOverlay from "@/Components/BudgetOverlay";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+
 import CategoriaItem from "../Components/Categoria/CategoriaItem";
 import ModalNuevaCategoria from "../Components/Categoria/ModalNuevaCategoria";
 import ModalSubcategoria from "../Components/Subcategoria/ModalNuevaSubcategoria";
@@ -10,7 +11,15 @@ import ModalEditarCategoria from "../Components/Categoria/ModalEditarCategoria";
 import PanelSubcategoriaDetalle from "../Components/Subcategoria/PanelSubcategoriaDetalle";
 import MiniPresupuesto from "../Components/Presupuesto/MiniPresupuesto";
 
-export default function Categorias({ gastos, ingresos, presupuestoActual }) {
+export default function Categorias({
+    gastos,
+    ingresos,
+    presupuestoActual,
+    sub,
+}) {
+    if (!presupuestoActual) {
+        return <BudgetOverlay />;
+    }
     const [expanded, setExpanded] = useState({});
     const { props } = usePage();
     const subSeleccionada = props.sub;
