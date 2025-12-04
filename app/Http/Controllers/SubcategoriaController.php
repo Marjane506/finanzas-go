@@ -16,14 +16,12 @@ class SubcategoriaController extends Controller
             'icon'         => 'nullable|string',
         ]);
 
-        // Verificar que la categoría pertenece al usuario
+
         $categoria = Categoria::findOrFail($validated['categoria_id']);
 
         if ($categoria->user_id !== auth()->id()) {
             abort(403);
         }
-
-        $validated['user_id'] = auth()->id();
 
         Subcategoria::create($validated);
 
@@ -32,7 +30,8 @@ class SubcategoriaController extends Controller
 
     public function update(Request $request, Subcategoria $subcategoria)
     {
-        if ($subcategoria->user_id !== auth()->id()) {
+
+        if ($subcategoria->categoria->user_id !== auth()->id()) {
             abort(403);
         }
 
@@ -48,7 +47,8 @@ class SubcategoriaController extends Controller
 
     public function destroy(Subcategoria $subcategoria)
     {
-        if ($subcategoria->user_id !== auth()->id()) {
+
+        if ($subcategoria->categoria->user_id !== auth()->id()) {
             abort(403);
         }
 

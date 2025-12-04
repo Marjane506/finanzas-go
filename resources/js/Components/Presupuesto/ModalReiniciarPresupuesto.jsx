@@ -14,13 +14,9 @@ export default function ModalReiniciarPresupuesto({ open, onClose }) {
             {
                 preserveScroll: true,
                 onSuccess: () => {
-                    // Actualiza solo el presupuestoActual sin recargar la página entera
                     router.reload({ only: ["presupuestoActual"] });
 
-                    // Cierra el modal
                     onClose();
-
-                    // Limpia el campo
                     setMonto("");
                 },
             }

@@ -6,7 +6,7 @@ export default function ModalDetalleSubcategoria({
     sub,
     onClose,
     onDelete,
-    onAddMovimiento, // 🔥 NUEVO
+    onAddMovimiento,
 }) {
     if (!sub) return null;
 
@@ -27,7 +27,6 @@ export default function ModalDetalleSubcategoria({
                     </p>
                 </div>
 
-                {/* 🔥 NUEVA ACCIÓN */}
                 <div className="mt-4">
                     <button
                         onClick={() => onAddMovimiento(sub.id)}
@@ -38,7 +37,6 @@ export default function ModalDetalleSubcategoria({
                     </button>
                 </div>
 
-                {/* ACCIONES ORIGINALES */}
                 <div className="flex justify-end gap-3 pt-4">
                     <button
                         className="px-4 py-2 bg-red-500 text-white rounded-lg flex items-center gap-2"

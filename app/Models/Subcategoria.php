@@ -15,6 +15,7 @@ class Subcategoria extends Model
         'name',
         'icon',
         'categoria_id',
+        'user_id'
     ];
 
     public function categoria()
