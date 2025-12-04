@@ -42,7 +42,7 @@ class MovimientoController extends Controller
 
         $presupuesto->save();
 
-        return redirect()->back()->with('success', 'Movimiento registrado!');
+        return redirect()->back(303)->with('success', 'Movimiento registrado!');
     }
     public function destroy(Movimiento $movimiento)
     {
@@ -52,7 +52,7 @@ class MovimientoController extends Controller
 
         $movimiento->delete();
 
-        return back()->with('success', 'Movimiento eliminado');
+        return back(303)->with('success', 'Movimiento eliminado');
     }
     public function update(Request $request, Movimiento $movimiento)
     {
@@ -67,6 +67,6 @@ class MovimientoController extends Controller
 
         $movimiento->update($data);
 
-        return back()->with('success', 'Movimiento actualizado');
+        return back(303)->with('success', 'Movimiento actualizado');
     }
 }

@@ -26,17 +26,6 @@ class AppServiceProvider extends ServiceProvider
                     'user' => auth()->user(),
                 ];
             },
-
-            'presupuestoActual' => function () {
-                if (!auth()->check()) {
-                    return null;
-                }
-
-                return auth()->user()
-                    ->historialPresupuestos()
-                    ->latest()
-                    ->first();
-            },
         ]);
     }
 }

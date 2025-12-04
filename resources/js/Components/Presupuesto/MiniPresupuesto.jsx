@@ -10,40 +10,35 @@ export default function MiniPresupuestoCircular({ presupuestoActual }) {
     const saldo = Number(presupuestoActual.saldo_final);
     const porcentaje = Math.max(0, Math.min((saldo / monto) * 100, 100));
 
-    // colores dinámicos
     const color =
         porcentaje < 30 ? "#ef4444" : porcentaje < 60 ? "#f59e0b" : "#10b981";
-
     return (
         <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center w-full">
-            {/* Título sin botón */}
             <div className="flex justify-between items-center w-full mb-4">
                 <h3 className="text-gray-800 font-semibold text-lg">
                     Presupuesto del mes
                 </h3>
             </div>
-
-            {/* Círculo */}
             <div className="relative h-48 w-48 flex items-center justify-center">
-                <svg className="h-full w-full">
+                <svg className="h-full w-full" viewBox="0 0 120 120">
                     <circle
-                        cx="50%"
-                        cy="50%"
-                        r="40%"
+                        cx="60"
+                        cy="60"
+                        r="50"
                         stroke="#e5e7eb"
-                        strokeWidth="12"
+                        strokeWidth="10"
                         fill="none"
                     />
 
                     <circle
-                        cx="50%"
-                        cy="50%"
-                        r="40%"
+                        cx="60"
+                        cy="60"
+                        r="50"
                         stroke={color}
-                        strokeWidth="12"
+                        strokeWidth="10"
                         fill="none"
-                        strokeDasharray="251"
-                        strokeDashoffset={251 - (251 * porcentaje) / 100}
+                        strokeDasharray="314" // 2 * π * 50
+                        strokeDashoffset={314 - (314 * porcentaje) / 100}
                         strokeLinecap="round"
                         style={{ transition: "stroke-dashoffset 0.8s ease" }}
                     />
@@ -59,12 +54,10 @@ export default function MiniPresupuestoCircular({ presupuestoActual }) {
                 </div>
             </div>
 
-            {/* Info */}
             <p className="text-gray-600 text-sm mt-2">
                 Presupuesto inicial: {monto} €
             </p>
 
-            {/* ⬇️ BOTÓN AHORA AQUÍ — DEBAJO DEL TEXTO */}
             <button
                 onClick={() => setOpenReiniciar(true)}
                 className="mt-6 px-4 py-3 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700"
@@ -72,7 +65,6 @@ export default function MiniPresupuestoCircular({ presupuestoActual }) {
                 Nuevo presupuesto
             </button>
 
-            {/* Modal */}
             <ModalReiniciarPresupuesto
                 open={openReiniciar}
                 onClose={() => setOpenReiniciar(false)}
