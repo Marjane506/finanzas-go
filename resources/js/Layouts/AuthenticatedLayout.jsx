@@ -20,7 +20,6 @@ export default function AuthenticatedLayout({ header, children }) {
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                {/* CATEGORÍAS */}
                                 <NavLink
                                     href={route("categorias")}
                                     active={route().current("categorias")}
@@ -28,7 +27,6 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Categorias
                                 </NavLink>
 
-                                {/* DASHBOARD */}
                                 <NavLink
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
@@ -38,7 +36,6 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
                         </div>
 
-                        {/* USER MENU */}
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
                             <div className="relative ms-3">
                                 <Dropdown>
@@ -84,7 +81,6 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
                         </div>
 
-                        {/* MOBILE MENU */}
                         <div className="-me-2 flex items-center sm:hidden">
                             <button
                                 onClick={() =>
@@ -186,8 +182,6 @@ export default function AuthenticatedLayout({ header, children }) {
             )}
 
             <main>{children}</main>
-
-            {!page.presupuestoActual && <BudgetOverlay user={user} />}
         </div>
     );
 }

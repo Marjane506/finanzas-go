@@ -3,6 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResumenController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\MovimientoController;
 use App\Http\Controllers\PresupuestoController;
@@ -55,6 +56,10 @@ Route::middleware('auth')->group(function () {
         ->name('movimientos.store');
     Route::delete('/movimientos/{movimiento}', [MovimientoController::class, 'destroy']);
     Route::put('/movimientos/{movimiento}', [MovimientoController::class, 'update']);
+    //RESUMEN
+    Route::get('/resumen', [ResumenController::class, 'index'])
+        ->middleware('auth')
+        ->name('resumen.index');
 });
 
 require __DIR__ . '/auth.php';
