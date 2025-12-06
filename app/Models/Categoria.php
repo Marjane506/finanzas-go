@@ -13,23 +13,25 @@ class Categoria extends Model
 
     protected $fillable = [
         'name',
-        'user_id',
         'tipo',
+        'user_id',
     ];
 
-    /**
-     * Relación: la categoría pertenece a un usuario
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Relación: una categoría tiene muchas subcategorías
-     */
     public function subcategorias()
     {
-        return $this->hasMany(Subcategoria::class, 'categoria_id');
+        return $this->hasMany(Subcategoria::class);
+    }
+
+
+    public function movimientos()
+    {
+        return $this->hasManyThrough(
+            Movimiento::class,
+            Subcategoria::class,
+            'categoria_id',
+            'subcategoria_id',
+            'id',
+            'id'
+        );
     }
 }

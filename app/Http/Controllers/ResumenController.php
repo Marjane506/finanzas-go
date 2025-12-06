@@ -13,11 +13,11 @@ class ResumenController extends Controller
     {
         $user = auth()->user();
 
-        // Mes seleccionado o el actual
+        // Mes seleccionado o actual
         $mes = $request->query('mes', now()->month);
         $anio = $request->query('anio', now()->year);
 
-        // Rango del mes
+        // Rango
         $inicio = Carbon::create($anio, $mes, 1)->startOfDay();
         $fin = Carbon::create($anio, $mes, 1)->endOfMonth()->endOfDay();
 
@@ -31,11 +31,11 @@ class ResumenController extends Controller
         $totalGastos = $movimientos->where('tipo', 'gasto')->sum('cantidad');
         $balance = $totalIngresos - $totalGastos;
 
-        // Gráfico circular → gastos agrupados por categoría
+        // 🔥 CORREGIDO → ahora usamos la relación movimientos() en Categoria.php
         $gastosPorCategoria = Categoria::where('user_id', $user->id)
-            ->withSum(['subcategorias.movimientos as total_gastos' => function ($q) use ($inicio, $fin) {
+            ->withSum(['movimientos as total_gastos' => function ($q) use ($inicio, $fin) {
                 $q->where('tipo', 'gasto')
-                    ->whereBetween('created_at', [$inicio, $fin]);
+                    ->whereBetween('movimientos.created_at', [$inicio, $fin]);
             }], 'cantidad')
             ->get()
             ->filter(fn($c) => $c->total_gastos > 0)
@@ -45,7 +45,7 @@ class ResumenController extends Controller
             ])
             ->values();
 
-        // Gráfico de barras → gastos por día
+        // Gastos por día
         $gastosPorDia = $movimientos
             ->where('tipo', 'gasto')
             ->groupBy(fn($m) => $m->created_at->format('d'))

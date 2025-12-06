@@ -5,6 +5,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
+import { useEffect } from "react";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -12,6 +13,10 @@ export default function Login({ status, canResetPassword }) {
         password: "",
         remember: false,
     });
+
+    useEffect(() => {
+        reset();
+    }, []);
 
     const submit = (e) => {
         e.preventDefault();
@@ -31,12 +36,12 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             )}
 
-            <form onSubmit={submit} className="m-4">
+            <form onSubmit={submit} autoComplete="off" className="m-4">
                 <div>
                     <h1 className="text-4xl font-bold text-center mb-2 text-indigo-600">
                         Inciar sesión
                     </h1>
-                    <p className=" mb-2 text-sm text-center font-normal text-gray-500">
+                    <p className="mb-2 text-sm text-center font-normal text-gray-500">
                         ¿Eres nuevo?{" "}
                         <Link
                             href={route("register")}
@@ -53,7 +58,7 @@ export default function Login({ status, canResetPassword }) {
                         name="email"
                         value={data.email}
                         className="mt-1 block w-full"
-                        autoComplete="username"
+                        autoComplete="new-email"
                         isFocused={true}
                         onChange={(e) => setData("email", e.target.value)}
                     />
@@ -70,7 +75,7 @@ export default function Login({ status, canResetPassword }) {
                         name="password"
                         value={data.password}
                         className="mt-1 block w-full"
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         onChange={(e) => setData("password", e.target.value)}
                     />
 

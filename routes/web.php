@@ -13,13 +13,15 @@ Route::get('/', function () {
     return Inertia::render('Auth/Login');
 })->name('home');
 
-//Route::get('/test-overlay', function () {
-//    return Inertia::render('TestOverlay');
-//});
-
+// CATEGORÍAS
 Route::get('/categorias', [CategoriaController::class, 'index'])
     ->middleware(['auth'])
     ->name('categorias');
+
+// RESUMEN (SOLO UNA VEZ)
+Route::get('/resumen', [ResumenController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('resumen');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -50,16 +52,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/subcategorias', [SubcategoriaController::class, 'store'])->name('subcategorias.store');
     Route::put('/subcategorias/{subcategoria}', [SubcategoriaController::class, 'update'])->name('subcategorias.update');
     Route::delete('/subcategorias/{subcategoria}', [SubcategoriaController::class, 'destroy'])->name('subcategorias.destroy');
-    //MOVIMIENTOS
-    Route::post('/movimientos', [MovimientoController::class, 'store'])
-        ->middleware('auth')
-        ->name('movimientos.store');
+
+    // MOVIMIENTOS
+    Route::post('/movimientos', [MovimientoController::class, 'store'])->name('movimientos.store');
     Route::delete('/movimientos/{movimiento}', [MovimientoController::class, 'destroy']);
     Route::put('/movimientos/{movimiento}', [MovimientoController::class, 'update']);
-    //RESUMEN
-    Route::get('/resumen', [ResumenController::class, 'index'])
-        ->middleware('auth')
-        ->name('resumen.index');
 });
 
 require __DIR__ . '/auth.php';

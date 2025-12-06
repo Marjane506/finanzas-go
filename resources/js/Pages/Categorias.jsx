@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { router, usePage } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import { PlusCircle } from "lucide-react";
 import BudgetOverlay from "@/Components/BudgetOverlay";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";

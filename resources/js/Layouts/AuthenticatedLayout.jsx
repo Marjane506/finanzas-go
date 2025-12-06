@@ -13,9 +13,9 @@ export default function AuthenticatedLayout({ header, children }) {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
+            <nav className="border-b border-gray-200 bg-white shadow-sm">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
+                    <div className="flex h-20 justify-between">
                         <div className="flex">
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
@@ -23,6 +23,13 @@ export default function AuthenticatedLayout({ header, children }) {
                                     active={route().current("categorias")}
                                 >
                                     Categorias
+                                </NavLink>
+
+                                <NavLink
+                                    href={route("resumen")}
+                                    active={route().current("resumen")}
+                                >
+                                    Resumen
                                 </NavLink>
 
                                 <NavLink
@@ -41,7 +48,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-lg font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                                             >
                                                 {user.name}
 
@@ -135,6 +142,12 @@ export default function AuthenticatedLayout({ header, children }) {
                         >
                             Categorías
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("resumen")}
+                            active={route().current("resumen")}
+                        >
+                            Resumen
+                        </ResponsiveNavLink>
 
                         <ResponsiveNavLink
                             href={route("dashboard")}
@@ -169,7 +182,6 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
                 </div>
             </nav>
-
             {header && (
                 <header className="bg-white shadow">
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -177,7 +189,6 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
                 </header>
             )}
-
             <main>{children}</main>
         </div>
     );

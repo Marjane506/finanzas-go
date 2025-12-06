@@ -1,5 +1,7 @@
+import SeleccionMes from "@/Components/Resumen/SeleccionMes";
+import GraficoCategorias from "@/Components/Resumen/GraficoCategorias";
+import GraficoGastosDia from "@/Components/Resumen/GraficoGastoDia";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Link } from "@inertiajs/react";
 
 export default function Resumen({
     mes,
@@ -12,30 +14,32 @@ export default function Resumen({
 }) {
     return (
         <AuthenticatedLayout>
-            <div className="max-w-6xl mx-auto p-6">
-                <h1 className="text-3xl font-bold mb-6">Resumen del mes</h1>
+            <div className="p-6 max-w-7xl mx-auto">
+                <SeleccionMes mesActual={mes} anioActual={anio} />
+                <h1 className="text-3xl font-bold text-gray-800 mb-6">
+                    Resumen del Mes
+                </h1>
 
-                {/* KPIs */}
-                <div className="grid grid-cols-3 gap-6 mb-10">
-                    <div className="bg-white p-6 rounded-xl shadow">
+                <div className="grid grid-cols-3 gap-6 mb-8">
+                    <div className="p-4 bg-white shadow rounded-xl">
                         <p className="text-gray-500">Ingresos</p>
-                        <p className="text-3xl text-green-600 font-bold">
+                        <p className="text-2xl font-bold text-green-600">
                             {totalIngresos} €
                         </p>
                     </div>
 
-                    <div className="bg-white p-6 rounded-xl shadow">
+                    <div className="p-4 bg-white shadow rounded-xl">
                         <p className="text-gray-500">Gastos</p>
-                        <p className="text-3xl text-red-600 font-bold">
+                        <p className="text-2xl font-bold text-red-600">
                             {totalGastos} €
                         </p>
                     </div>
 
-                    <div className="bg-white p-6 rounded-xl shadow">
+                    <div className="p-4 bg-white shadow rounded-xl">
                         <p className="text-gray-500">Balance</p>
                         <p
-                            className={`text-3xl font-bold ${
-                                balance >= 0 ? "text-green-700" : "text-red-700"
+                            className={`text-2xl font-bold ${
+                                balance >= 0 ? "text-green-600" : "text-red-600"
                             }`}
                         >
                             {balance} €
@@ -43,22 +47,19 @@ export default function Resumen({
                     </div>
                 </div>
 
-                {/* Aquí pondremos los gráficos */}
                 <div className="grid grid-cols-2 gap-6">
-                    <div className="bg-white p-6 rounded-xl shadow">
-                        <h2 className="text-xl font-semibold mb-4">
+                    <div className="bg-white shadow rounded-xl p-6">
+                        <h2 className="text-lg font-semibold mb-4">
                             Gastos por categoría
                         </h2>
-
-                        <pre>{JSON.stringify(gastosPorCategoria, null, 2)}</pre>
+                        <GraficoCategorias data={gastosPorCategoria} />
                     </div>
 
-                    <div className="bg-white p-6 rounded-xl shadow">
-                        <h2 className="text-xl font-semibold mb-4">
+                    <div className="bg-white shadow rounded-xl p-6">
+                        <h2 className="text-lg font-semibold mb-4">
                             Gastos por día
                         </h2>
-
-                        <pre>{JSON.stringify(gastosPorDia, null, 2)}</pre>
+                        <GraficoGastosDia data={gastosPorDia} />
                     </div>
                 </div>
             </div>
