@@ -14,12 +14,12 @@ export default function MiniPresupuestoCircular({ presupuestoActual }) {
         porcentaje < 30 ? "#ef4444" : porcentaje < 60 ? "#f59e0b" : "#10b981";
     return (
         <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center w-full">
-            <div className="flex justify-between items-center w-full mb-4">
+            <div className="flex justify-between items-center w-full mb-3">
                 <h3 className="text-gray-800 font-semibold text-lg">
-                    Presupuesto del mes
+                    Mi Presupuesto
                 </h3>
             </div>
-            <div className="relative h-48 w-48 flex items-center justify-center">
+            <div className="relative h-44 w-44 flex items-center justify-center">
                 <svg className="h-full w-full" viewBox="0 0 120 120">
                     <circle
                         cx="60"

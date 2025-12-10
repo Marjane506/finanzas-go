@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { router } from "@inertiajs/react";
-
-import { Pencil, Trash2 } from "lucide-react";
-
+import { Edit, Trash2 } from "lucide-react";
 import ModalMovimiento from "../Movimiento/ModalMovimiento";
 import ModalEditarMovimiento from "../Movimiento/ModalEditarMovimiento";
 import ModalEliminarMovimiento from "../Movimiento/ModalEliminarMovimiento";
-
 import ModalEditarSubcategoria from "./ModalEditarSubcategoria";
 import ModalEliminarSubcategoria from "./ModalEliminarSubcategoria";
 
@@ -22,7 +19,7 @@ export default function PanelSubcategoriaDetalle({ sub }) {
     const [modalEliminarMov, setModalEliminarMov] = useState(false);
     const [movAEliminar, setMovAEliminar] = useState(null);
 
-    // Editar / Eliminar subcategoría
+    // Editar/Eliminar subcategoría
     const [openEditarSub, setOpenEditarSub] = useState(false);
     const [openEliminarSub, setOpenEliminarSub] = useState(false);
 
@@ -68,10 +65,10 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                     {/* Editar subcategoría */}
                     <button
                         onClick={() => setOpenEditarSub(true)}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-gray-500 hover:text-gray-700"
                         title="Editar subcategoría"
                     >
-                        <Pencil size={20} />
+                        <Edit size={18} />
                     </button>
 
                     {/* Eliminar subcategoría */}
@@ -80,7 +77,7 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                         className="text-red-600 hover:text-red-800"
                         title="Eliminar subcategoría"
                     >
-                        <Trash2 size={20} />
+                        <Trash2 size={18} />
                     </button>
                 </div>
             </div>
@@ -97,7 +94,7 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                 </p>
             </div>
 
-            {/* INGRESOS */}
+            {/* Ingresos */}
             <div className="mb-6">
                 <h3 className="text-lg font-semibold text-green-700 mb-2">
                     Ingresos (+{totalIngresos.toFixed(2)} €)
@@ -165,7 +162,7 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                                     onClick={() => abrirEditarMovimiento(mov)}
                                     className="text-blue-600 hover:text-blue-800"
                                 >
-                                    <Pencil size={18} />
+                                    <Edit size={18} />
                                 </button>
 
                                 {/* Eliminar gasto */}
@@ -185,7 +182,6 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                 )}
             </div>
 
-            {/* Botón añadir */}
             <button
                 onClick={() => setOpenMovimiento(true)}
                 className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"

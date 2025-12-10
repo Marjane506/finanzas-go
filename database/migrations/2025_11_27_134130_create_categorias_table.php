@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
 
-
-
             // Cada categoría pertenece a un usuario
             $table->foreignId('user_id')
                 ->constrained()

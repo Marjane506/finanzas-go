@@ -8,12 +8,32 @@ export default function ModalEditarSubcategoria({
     onClose,
 }) {
     const [name, setName] = useState("");
+    const [error, setError] = useState("");
 
     useEffect(() => {
         if (subcategoria) {
             setName(subcategoria.name);
+            setError("");
         }
     }, [subcategoria]);
+
+    //Solo letras, acentos, ñ y espacios
+    const handleNameChange = (e) => {
+        const value = e.target.value;
+
+        const regexInvalid = /[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g;
+
+        if (regexInvalid.test(value)) {
+            setError("Solo se permiten letras y espacios.");
+        } else {
+            setError("");
+        }
+
+        // Elimina caracteres no permitidos
+        const cleaned = value.replace(regexInvalid, "");
+
+        setName(cleaned);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -41,13 +61,19 @@ export default function ModalEditarSubcategoria({
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <input
-                        type="text"
-                        className="w-full border rounded-lg px-3 py-2"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                    />
+                    <div>
+                        <input
+                            type="text"
+                            className="w-full border rounded-lg px-3 py-2"
+                            value={name}
+                            onChange={handleNameChange}
+                            required
+                        />
+
+                        {error && (
+                            <p className="text-red-600 text-sm mt-1">{error}</p>
+                        )}
+                    </div>
 
                     <div className="flex justify-end gap-3 pt-4">
                         <button

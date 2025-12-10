@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { router } from "@inertiajs/react";
 import BudgetImg from "../../assets/mujerynino.jpg";
-import PrimaryButton from "@/Components/PrimaryButton"; // 🔥 usa tus estilos
+import PrimaryButton from "@/Components/PrimaryButton";
 
 export default function BudgetOverlay({ user }) {
     const [monto, setMonto] = useState("");
@@ -31,7 +31,6 @@ export default function BudgetOverlay({ user }) {
                     exit={{ opacity: 0, y: 20 }}
                     transition={{ duration: 0.25 }}
                 >
-                    {/* Imagen */}
                     <div className="flex-1 flex items-center justify-center">
                         <img
                             src={BudgetImg}
@@ -40,7 +39,6 @@ export default function BudgetOverlay({ user }) {
                         />
                     </div>
 
-                    {/* Texto + Form */}
                     <div className="flex-1 flex flex-col justify-center items-center text-center">
                         <h2 className="text-3xl font-bold text-gray-800 mb-4">
                             “Lo primero es lo primero”!
@@ -59,7 +57,6 @@ export default function BudgetOverlay({ user }) {
                             className="w-full max-w-xs border-2 border-gray-300 rounded-xl p-4 text-center text-2xl text-gray-800 focus:outline-none focus:border-indigo-500 shadow-sm mb-6"
                         />
 
-                        {/* 🔥 Usamos PrimaryButton (tus estilos) */}
                         <PrimaryButton
                             disabled={!monto}
                             onClick={handleSave}

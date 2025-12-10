@@ -32,7 +32,6 @@ class HistorialPresupuesto extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Ejemplos de scopes útiles
     public function scopeDelAno($query)
     {
         return $query->whereYear('fecha_inicio', now()->year);
