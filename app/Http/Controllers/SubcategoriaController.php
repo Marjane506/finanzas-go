@@ -12,10 +12,9 @@ class SubcategoriaController extends Controller
     {
         $validated = $request->validate([
             'categoria_id' => 'required|exists:categorias,id',
-            'name'         => 'required|string|max:255',
+            'name'         => ['required', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/u', 'max:255'],
             'icon'         => 'nullable|string',
         ]);
-
 
         $categoria = Categoria::findOrFail($validated['categoria_id']);
 

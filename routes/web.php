@@ -18,13 +18,13 @@ Route::get('/categorias', [CategoriaController::class, 'index'])
     ->middleware(['auth'])
     ->name('categorias');
 
-// RESUMEN (SOLO UNA VEZ)
+// RESUMEN
 Route::get('/resumen', [ResumenController::class, 'index'])
     ->middleware(['auth'])
     ->name('resumen');
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Categorias');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

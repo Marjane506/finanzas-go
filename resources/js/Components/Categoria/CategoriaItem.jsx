@@ -39,10 +39,9 @@ export default function CategoriaItem({
                     >
                         <Edit size={18} />
                     </button>
-
                     {/* Eliminar categoría */}
                     <button
-                        onClick={() => onDelete(categoria.id)}
+                        onClick={() => onDelete(categoria)}
                         className="text-red-500 hover:text-red-700"
                     >
                         <Trash2 size={18} />

@@ -4,7 +4,7 @@ import Modal from "@/Components/Modal";
 export default function ModalNuevaCategoria({ open, onClose, onSave }) {
     const [form, setForm] = useState({
         name: "",
-        tipo: "gasto", // ← NECESARIO
+        tipo: "gasto",
     });
 
     const handleSubmit = (e) => {

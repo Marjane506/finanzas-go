@@ -22,7 +22,7 @@ class Movimiento extends Model
         return $this->belongsTo(Subcategoria::class);
     }
 
-    public function categoria() // ← Útil para acceder directo
+    public function categoria()
     {
         return $this->hasOneThrough(
             Categoria::class,

@@ -51,7 +51,6 @@ export default function SeleccionMes({ mesActual, anioActual }) {
 
     return (
         <div className="flex items-center justify-center gap-4 mb-6 select-none">
-            {/* Botón Mes Anterior */}
             <button
                 onClick={anteriorMes}
                 className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
@@ -59,7 +58,6 @@ export default function SeleccionMes({ mesActual, anioActual }) {
                 <ChevronLeft size={20} className="text-gray-700" />
             </button>
 
-            {/* Texto del Mes */}
             <div className="flex items-center gap-2">
                 <Calendar size={20} className="text-indigo-600" />
                 <h2 className="text-2xl font-semibold text-gray-800">
@@ -67,7 +65,6 @@ export default function SeleccionMes({ mesActual, anioActual }) {
                 </h2>
             </div>
 
-            {/* Botón Mes Siguiente */}
             <button
                 onClick={siguienteMes}
                 className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"

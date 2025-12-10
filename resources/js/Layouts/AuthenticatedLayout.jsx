@@ -31,13 +31,6 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Resumen
                                 </NavLink>
-
-                                <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
-                                >
-                                    Dashboard
-                                </NavLink>
                             </div>
                         </div>
 
@@ -93,7 +86,9 @@ export default function AuthenticatedLayout({ header, children }) {
                                         (prev) => !prev
                                     )
                                 }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400
+                                transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500
+                                 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
                             >
                                 <svg
                                     className="h-6 w-6"
@@ -147,13 +142,6 @@ export default function AuthenticatedLayout({ header, children }) {
                             active={route().current("resumen")}
                         >
                             Resumen
-                        </ResponsiveNavLink>
-
-                        <ResponsiveNavLink
-                            href={route("dashboard")}
-                            active={route().current("dashboard")}
-                        >
-                            Dashboard
                         </ResponsiveNavLink>
                     </div>
 

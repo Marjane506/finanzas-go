@@ -18,7 +18,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Restaurar columna si se hace rollback
+
             $table->decimal('budget', 10, 2)->nullable();
         });
     }

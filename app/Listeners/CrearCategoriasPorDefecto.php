@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Models\Categoria;
-use Illuminate\Auth\Events\Registered; // ← CORRECTO
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
