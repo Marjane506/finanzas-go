@@ -50,8 +50,7 @@ export default function GraficoCategorias({ data }) {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row gap-6 items-center justify-between w-full">
-            {/* GRAFICO */}
+        <div className="flex flex-col lg:flex-row gap-6 items-center justify-around w-full">
             <div className="w-60 h-60 relative">
                 <Pie ref={chartRef} data={chartData} />
             </div>

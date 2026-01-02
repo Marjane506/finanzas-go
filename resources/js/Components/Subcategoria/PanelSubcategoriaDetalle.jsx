@@ -8,18 +8,11 @@ import ModalEditarSubcategoria from "./ModalEditarSubcategoria";
 import ModalEliminarSubcategoria from "./ModalEliminarSubcategoria";
 
 export default function PanelSubcategoriaDetalle({ sub }) {
-    // Añadir movimiento
     const [openMovimiento, setOpenMovimiento] = useState(false);
-
-    // Editar movimiento
     const [openEditarMov, setOpenEditarMov] = useState(false);
     const [movEditar, setMovEditar] = useState(null);
-
-    // Eliminar movimiento
     const [modalEliminarMov, setModalEliminarMov] = useState(false);
     const [movAEliminar, setMovAEliminar] = useState(null);
-
-    // Editar/Eliminar subcategoría
     const [openEditarSub, setOpenEditarSub] = useState(false);
     const [openEliminarSub, setOpenEliminarSub] = useState(false);
 
@@ -44,9 +37,23 @@ export default function PanelSubcategoriaDetalle({ sub }) {
         });
     };
 
-    // Cálculo de movimientos
-    const gastos = sub.movimientos?.filter((m) => m.tipo === "gasto") || [];
-    const ingresos = sub.movimientos?.filter((m) => m.tipo === "ingreso") || [];
+    const hoy = new Date();
+    const mesActual = hoy.getMonth(); // 0–11
+    const añoActual = hoy.getFullYear();
+
+    const movimientosMes = (sub.movimientos || []).filter((m) => {
+        const fecha = new Date(m.created_at);
+        return (
+            fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual
+        );
+    });
+
+    movimientosMes.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
+
+    const gastos = movimientosMes.filter((m) => m.tipo === "gasto");
+    const ingresos = movimientosMes.filter((m) => m.tipo === "ingreso");
 
     const totalGastos = gastos.reduce((sum, m) => sum + Number(m.cantidad), 0);
     const totalIngresos = ingresos.reduce(
@@ -57,34 +64,28 @@ export default function PanelSubcategoriaDetalle({ sub }) {
 
     return (
         <div className="bg-white rounded-xl shadow p-6">
-            {/* HEADER */}
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">{sub.name}</h2>
 
                 <div className="flex gap-3">
-                    {/* Editar subcategoría */}
                     <button
                         onClick={() => setOpenEditarSub(true)}
                         className="text-gray-500 hover:text-gray-700"
-                        title="Editar subcategoría"
                     >
                         <Edit size={18} />
                     </button>
 
-                    {/* Eliminar subcategoría */}
                     <button
                         onClick={() => setOpenEliminarSub(true)}
                         className="text-red-600 hover:text-red-800"
-                        title="Eliminar subcategoría"
                     >
                         <Trash2 size={18} />
                     </button>
                 </div>
             </div>
 
-            {/* Balance */}
             <div className="p-4 bg-gray-50 rounded-lg border mb-6">
-                <p className="text-sm text-gray-500">Balance</p>
+                <p className="text-sm text-gray-500">Balance del mes</p>
                 <p
                     className={`text-3xl font-bold ${
                         balance >= 0 ? "text-green-700" : "text-red-700"
@@ -94,7 +95,6 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                 </p>
             </div>
 
-            {/* Ingresos */}
             <div className="mb-6">
                 <h3 className="text-lg font-semibold text-green-700 mb-2">
                     Ingresos (+{totalIngresos.toFixed(2)} €)
@@ -117,7 +117,6 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                                     ).toLocaleDateString()}
                                 </span>
 
-                                {/* Eliminar ingreso */}
                                 <button
                                     onClick={() =>
                                         solicitarEliminarMovimiento(mov)
@@ -130,11 +129,12 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                         </div>
                     ))
                 ) : (
-                    <p className="text-gray-500 text-sm">Sin ingresos.</p>
+                    <p className="text-gray-500 text-sm">
+                        Sin ingresos este mes.
+                    </p>
                 )}
             </div>
 
-            {/* GASTOS */}
             <div className="mb-6">
                 <h3 className="text-lg font-semibold text-red-700 mb-2">
                     Gastos (-{totalGastos.toFixed(2)} €)
@@ -157,7 +157,6 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                                     ).toLocaleDateString()}
                                 </span>
 
-                                {/* Editar gasto */}
                                 <button
                                     onClick={() => abrirEditarMovimiento(mov)}
                                     className="text-blue-600 hover:text-blue-800"
@@ -165,7 +164,6 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                                     <Edit size={18} />
                                 </button>
 
-                                {/* Eliminar gasto */}
                                 <button
                                     onClick={() =>
                                         solicitarEliminarMovimiento(mov)
@@ -178,7 +176,9 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                         </div>
                     ))
                 ) : (
-                    <p className="text-gray-500 text-sm">Sin gastos.</p>
+                    <p className="text-gray-500 text-sm">
+                        Sin gastos este mes.
+                    </p>
                 )}
             </div>
 
@@ -189,7 +189,6 @@ export default function PanelSubcategoriaDetalle({ sub }) {
                 Añadir movimiento
             </button>
 
-            {/* MODALES */}
             <ModalMovimiento
                 open={openMovimiento}
                 onClose={() => setOpenMovimiento(false)}

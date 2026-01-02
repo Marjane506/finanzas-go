@@ -18,11 +18,14 @@ export default function SeleccionMes({ mesActual, anioActual }) {
     ];
 
     const cambiarMes = (nuevoMes, nuevoAnio) => {
-        router.get(
-            "/resumen",
-            { mes: nuevoMes, anio: nuevoAnio },
-            { preserveState: true }
-        );
+        router.visit("/resumen", {
+            method: "get",
+            data: {
+                mes: Number(nuevoMes),
+                anio: Number(nuevoAnio),
+            },
+            preserveState: true,
+        });
     };
 
     const siguienteMes = () => {

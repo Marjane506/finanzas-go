@@ -13,27 +13,20 @@ class ResumenController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
+        $mes = (int) $request->query('mes', now()->month);
+        $anio = (int) $request->query('anio', now()->year);
 
-        // Mes seleccionado o actual
-        $mes = $request->query('mes', now()->month);
-        $anio = $request->query('anio', now()->year);
 
-        // Rango del mes
         $inicio = Carbon::create($anio, $mes, 1)->startOfDay();
         $fin = Carbon::create($anio, $mes, 1)->endOfMonth()->endOfDay();
 
-        // Movimientos del usuario en el mes
         $movimientos = Movimiento::where('user_id', $user->id)
             ->whereBetween('created_at', [$inicio, $fin])
             ->get();
 
-        // KPI del Mes
-
-        $totalIngresos = $movimientos->where('tipo', 'ingreso')->sum('cantidad');
-        $totalGastos = $movimientos->where('tipo', 'gasto')->sum('cantidad');
-        $balance = $totalIngresos - $totalGastos;
-
-        //Gastos por Categoría
+        $totalIngresos = round($movimientos->where('tipo', 'ingreso')->sum('cantidad'), 2);
+        $totalGastos = round($movimientos->where('tipo', 'gasto')->sum('cantidad'), 2);
+        $balance = round($totalIngresos - $totalGastos, 2);
 
         $categorias = Categoria::where('user_id', $user->id)
             ->with(['subcategorias.movimientos' => function ($q) use ($inicio, $fin) {
@@ -44,10 +37,7 @@ class ResumenController extends Controller
 
         $gastosPorCategoria = $categorias
             ->map(function ($categoria) {
-                $total = $categoria->subcategorias
-                    ->flatMap->movimientos
-                    ->sum('cantidad');
-
+                $total = round($categoria->subcategorias->flatMap->movimientos->sum('cantidad'), 2);
                 return [
                     'categoria' => $categoria->name,
                     'total' => $total,
@@ -56,13 +46,10 @@ class ResumenController extends Controller
             ->filter(fn($c) => $c['total'] > 0)
             ->values();
 
-
-        //Gastos por día (para vista diaria y mensual)
-
         $gastosAgrupados = $movimientos
             ->where('tipo', 'gasto')
             ->groupBy(fn($m) => $m->created_at->format('d'))
-            ->map(fn($items) => $items->sum('cantidad'));
+            ->map(fn($items) => round($items->sum('cantidad'), 2));
 
         $totalDias = $inicio->daysInMonth;
 
@@ -75,32 +62,24 @@ class ResumenController extends Controller
         $gastosPorMes = collect($gastosPorDia)->map(function ($valor, $dia) {
             return [
                 'label' => $dia,
-                'valor' => (float) $valor,
+                'valor' => round((float) $valor, 2)
             ];
         })->values();
 
-        // Gastos por Semana
-
-        $gastosPorSemanaRaw = Movimiento::where('user_id', $user->id)
-            ->whereBetween('created_at', [$inicio, $fin]) // SOLO el mes actual
+        $gastosPorSemana = Movimiento::where('user_id', $user->id)
             ->where('tipo', 'gasto')
-            ->selectRaw('WEEK(created_at, 1) as semana, SUM(cantidad) as total')
-            ->groupBy('semana')
-            ->pluck('total', 'semana');
-
-
-        $primerDiaMes = Carbon::create($anio, $mes, 1);
-        $ultimaSemana = $primerDiaMes->weeksInMonth; // devuelve 4 o 5 semanas
-
-        $gastosPorSemana = collect(range(1, $ultimaSemana))->map(function ($semana) use ($gastosPorSemanaRaw) {
-            return [
-                'label' => "Semana $semana",
-                'valor' => (float) ($gastosPorSemanaRaw[$semana] ?? 0),
-            ];
-        });
-
-        // Gastos por Año (12 meses)
-
+            ->whereBetween('created_at', [$inicio, $fin])
+            ->get()
+            ->groupBy(function ($mov) {
+                return floor(($mov->created_at->day - 1) / 7) + 1;
+            })
+            ->map(function ($items, $semana) {
+                return [
+                    'label' => "Semana $semana",
+                    'valor' => round($items->sum('cantidad'), 2),
+                ];
+            })
+            ->values();
 
         $gastosPorAnioRaw = Movimiento::where('user_id', $user->id)
             ->whereYear('created_at', $anio)
@@ -111,7 +90,7 @@ class ResumenController extends Controller
 
         $gastosPorAnio = collect(range(1, 12))->map(fn($mes) => [
             'label' => DateTime::createFromFormat('!m', $mes)->format('M'),
-            'valor' => (float) ($gastosPorAnioRaw[$mes] ?? 0),
+            'valor' => round((float) ($gastosPorAnioRaw[$mes] ?? 0), 2),
         ]);
 
         $consejos = $this->generarConsejosIA($totalIngresos, $totalGastos, $gastosPorCategoria);
@@ -124,12 +103,9 @@ class ResumenController extends Controller
             'balance' => $balance,
             'gastosPorCategoria' => $gastosPorCategoria,
             'gastosPorDia' => $gastosPorDia,
-
-
             'gastosPorSemana' => $gastosPorSemana,
             'gastosPorMes' => $gastosPorMes,
             'gastosPorAnio' => $gastosPorAnio,
-
             'consejos' => $consejos,
         ]);
     }
@@ -138,42 +114,36 @@ class ResumenController extends Controller
     {
         $consejos = [];
 
-        // Balance negativo
         if ($totalGastos > $totalIngresos) {
-            $diff = $totalGastos - $totalIngresos;
-            $consejos[] = "Este mes has gastado más de lo que ingresaste. Estás en negativo por " . number_format($diff, 2) . " €. Quizá puedas revisar gastos variables para volver a equilibrarte.";
+            $diff = round($totalGastos - $totalIngresos, 2);
+            $consejos[] = "Este mes has gastado más de lo que ingresaste. Estás en negativo por " . number_format($diff, 2) . " €.";
         }
 
-        // Categorías con alto porcentaje
         foreach ($gastosPorCategoria as $cat) {
             $porcentaje = $cat['total'] / max($totalIngresos, 1);
             $p = round($porcentaje * 100);
 
             if ($porcentaje > 0.30) {
-                $consejos[] = "Has destinado un {$p}% de tus ingresos a **{$cat['categoria']}**. Reducirlo al 20–25% podría darte un margen de ahorro más cómodo.";
+                $consejos[] = "Has destinado un {$p}% de tus ingresos a {$cat['categoria']}.";
             }
 
             if ($porcentaje > 0.50) {
-                $consejos[] = "Tu gasto en **{$cat['categoria']}** domina tu presupuesto este mes. Quizá puedas establecer un límite semanal o mensual para mantenerlo bajo control.";
+                $consejos[] = "Tu gasto en {$cat['categoria']} domina tu presupuesto.";
             }
         }
 
-        // Alto porcentaje general de gasto
         if ($totalGastos > $totalIngresos * 0.75) {
-            $consejos[] = "Has utilizado más del 75% de tus ingresos. Un pequeño ajuste en uno o dos gastos podría ayudarte a cerrar el mes más holgado.";
+            $consejos[] = "Has utilizado más del 75% de tus ingresos.";
         }
 
-        // Gastos muy bajos (positivo)
         if ($totalGastos < $totalIngresos * 0.40) {
-            $consejos[] = "Estás gastando menos del 40% de tus ingresos. ¡Excelente! Podrías considerar aumentar tu ahorro este mes.";
+            $consejos[] = "Estás gastando menos del 40% de tus ingresos. ¡Genial!";
         }
 
-        // Si no hay alertas
         if (empty($consejos)) {
-            $consejos[] = "Tu presupuesto está equilibrado y tus gastos están controlados. ¡Buen trabajo este mes! 🌟";
+            $consejos[] = "Tu presupuesto está equilibrado este mes.";
         }
 
-        // IA Simulada
         $key = array_rand($consejos);
 
         return [$consejos[$key]];

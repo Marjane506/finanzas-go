@@ -22,7 +22,7 @@ class PresupuestoController extends Controller
             'user_id'       => $user->id,
             'monto_inicial' => $request->monto_inicial,
             'saldo_final'   => $request->monto_inicial,
-            'periodo'       => now()->locale('es')->translatedFormat('F Y'),
+            'periodo'       => now()->format('Y-m'),
             'fecha_inicio'  => now(),
             'fecha_fin'     => now()->endOfMonth(),
         ]);

@@ -30,15 +30,17 @@ export default function ModalMovimiento({ open, onClose, subcategoriaId }) {
 
     return (
         <Modal show={open} onClose={onClose}>
-            <div className="p-6 space-y-4">
-                <h2 className="text-xl font-semibold">Nuevo movimiento</h2>
+            <div className="p-6 space-y-5 rounded-xl bg-white">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                    Registrar movimiento
+                </h2>
 
                 <div className="space-y-2">
-                    <label className="text-gray-700 font-medium">Tipo</label>
+                    <label className="text-gray-600 font-medium">Tipo</label>
                     <select
                         value={tipo}
                         onChange={(e) => setTipo(e.target.value)}
-                        className="w-full border rounded-lg p-2"
+                        className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                     >
                         <option value="gasto">Gasto</option>
                         <option value="ingreso">Ingreso</option>
@@ -46,29 +48,29 @@ export default function ModalMovimiento({ open, onClose, subcategoriaId }) {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-gray-700 font-medium">
+                    <label className="text-gray-600 font-medium">
                         Cantidad
                     </label>
                     <input
                         type="number"
                         value={cantidad}
                         onChange={(e) => setCantidad(e.target.value)}
-                        className="w-full border rounded-lg p-2"
+                        className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                         placeholder="0 €"
                     />
                 </div>
 
                 <div className="flex justify-end gap-3 pt-4">
                     <button
-                        className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
+                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
                         onClick={onClose}
                     >
                         Cancelar
                     </button>
 
                     <button
-                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
                         onClick={enviar}
+                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow-md"
                     >
                         Guardar
                     </button>

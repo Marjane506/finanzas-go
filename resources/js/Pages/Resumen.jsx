@@ -25,12 +25,12 @@ export default function Resumen({
                 </h2>
             }
         >
-            <Head title="Resumen" />0
+            <Head title="Resumen" />
             <div className="p-6 max-w-screen-2xl mx-auto">
                 {/* Selector Mes */}
                 <SeleccionMes mesActual={mes} anioActual={anio} />
 
-                {/* TARJETAS: KPI + Consejos */}
+                {/* kPI + Consejos */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                     {/* Ingresos */}
                     <div
@@ -90,7 +90,7 @@ export default function Resumen({
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 ">
                     <div
-                        className="bg-white shadow rounded-xl p-6 border border-gray-200
+                        className="bg-white shadow-sm rounded-xl p-6 border border-gray-300
                     hover:shadow-lg hover:border-indigo-300 transition-all duration-200"
                     >
                         <h2 className="text-lg font-semibold mb-4">
@@ -101,7 +101,7 @@ export default function Resumen({
 
                     {/* Periodos */}
                     <div
-                        className="bg-white shadow rounded-xl p-6 border border-gray-200
+                        className="bg-white shadow-sm rounded-xl p-2 border border-gray-300
                     hover:shadow-lg hover:border-indigo-300 transition-all duration-200"
                     >
                         <GraficoPeriodos
