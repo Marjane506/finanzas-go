@@ -1,5 +1,7 @@
 import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
+import { Link } from "@inertiajs/react";
+
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { usePage } from "@inertiajs/react";
 import { useState } from "react";
@@ -14,9 +16,22 @@ export default function AuthenticatedLayout({ header, children }) {
     return (
         <div className="min-h-screen bg-gray-100">
             <nav className="border-b border-gray-200 bg-white shadow-sm">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-20 justify-between">
-                        <div className="flex">
+                <div className="mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex h-20 justify-around">
+                        <div>
+                            <Link
+                                href={route("categorias")}
+                                className="flex items-center whitespace-nowrap text-2xl font-bold tracking-tight text-indigo-600"
+                            >
+                                <img
+                                    src="/img/logo.png"
+                                    alt="FinanzasGo"
+                                    className="h-20 w-20"
+                                />
+                                <span className="ml-2">FinanzasGo</span>
+                            </Link>
+                        </div>
+                        <div className="flex items-center">
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
                                     href={route("categorias")}
