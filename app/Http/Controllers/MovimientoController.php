@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Movimiento;
 use App\Models\Subcategoria;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+
 
 class MovimientoController extends Controller
 {
@@ -15,6 +15,9 @@ class MovimientoController extends Controller
             'subcategoria_id' => 'required|exists:subcategorias,id',
             'tipo' => 'required|in:gasto,ingreso',
             'cantidad' => 'required|numeric|min:0.01',
+            'fecha' => 'required|date',
+
+
         ]);
 
         $user = auth()->user();
@@ -30,7 +33,7 @@ class MovimientoController extends Controller
             'subcategoria_id' => $subcategoria->id,
             'tipo' => $request->tipo,
             'cantidad' => $request->cantidad,
-            'created_at' => now(),
+            'fecha' => $request->fecha,
         ]);
 
         $presupuesto = $user->presupuestoActual;
@@ -79,6 +82,7 @@ class MovimientoController extends Controller
         $data = $request->validate([
             'tipo' => 'required|in:gasto,ingreso',
             'cantidad' => 'required|numeric|min:0.01',
+            'fecha' => 'required|date',
         ]);
 
         $user = auth()->user();

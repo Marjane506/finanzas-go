@@ -5,6 +5,7 @@ import { router } from "@inertiajs/react";
 export default function ModalMovimiento({ open, onClose, subcategoriaId }) {
     const [tipo, setTipo] = useState("gasto");
     const [cantidad, setCantidad] = useState("");
+    const [fecha, setFecha] = useState(new Date().toISOString().slice(0, 10));
 
     const enviar = () => {
         if (!cantidad) return;
@@ -14,6 +15,7 @@ export default function ModalMovimiento({ open, onClose, subcategoriaId }) {
             {
                 tipo,
                 cantidad,
+                fecha,
                 subcategoria_id: subcategoriaId,
             },
             {
@@ -24,7 +26,7 @@ export default function ModalMovimiento({ open, onClose, subcategoriaId }) {
                     setTipo("gasto");
                     onClose();
                 },
-            }
+            },
         );
     };
 
@@ -46,7 +48,15 @@ export default function ModalMovimiento({ open, onClose, subcategoriaId }) {
                         <option value="ingreso">Ingreso</option>
                     </select>
                 </div>
-
+                <div className="space-y-2">
+                    <label className="text-gray-600 font-medium">Fecha</label>
+                    <input
+                        type="date"
+                        value={fecha}
+                        onChange={(e) => setFecha(e.target.value)}
+                        className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                    />
+                </div>
                 <div className="space-y-2">
                     <label className="text-gray-600 font-medium">
                         Cantidad

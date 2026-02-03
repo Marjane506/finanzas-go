@@ -5,25 +5,27 @@ import { router } from "@inertiajs/react";
 export default function ModalEditarMovimiento({ open, onClose, movimiento }) {
     const [tipo, setTipo] = useState("gasto");
     const [cantidad, setCantidad] = useState("");
+    const [fecha, setFecha] = useState("");
 
     useEffect(() => {
         if (movimiento) {
             setTipo(movimiento.tipo);
             setCantidad(movimiento.cantidad);
+            setFecha(movimiento.fecha?.slice(0, 10));
         }
     }, [movimiento]);
 
     const enviar = () => {
         router.put(
             `/movimientos/${movimiento.id}`,
-            { tipo, cantidad },
+            { tipo, cantidad, fecha },
             {
                 preserveScroll: true,
                 onSuccess: () => {
                     router.reload({ only: ["sub"] });
                     onClose();
                 },
-            }
+            },
         );
     };
 
@@ -45,7 +47,15 @@ export default function ModalEditarMovimiento({ open, onClose, movimiento }) {
                         <option value="ingreso">Ingreso</option>
                     </select>
                 </div>
-
+                <div>
+                    <label className="text-gray-700 font-medium">Fecha</label>
+                    <input
+                        type="date"
+                        value={fecha}
+                        onChange={(e) => setFecha(e.target.value)}
+                        className="w-full border rounded-lg p-2"
+                    />
+                </div>
                 <div>
                     <label className="text-gray-700 font-medium">
                         Cantidad
