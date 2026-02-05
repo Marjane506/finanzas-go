@@ -21,7 +21,9 @@ class ResumenController extends Controller
         $fin = Carbon::create($anio, $mes, 1)->endOfMonth()->endOfDay();
 
         $movimientos = Movimiento::where('user_id', $user->id)
-            ->whereBetween('created_at', [$inicio, $fin])
+            ->whereYear('fecha', $anio)
+            ->whereMonth('fecha', $mes)
+
             ->get();
 
         $totalIngresos = round($movimientos->where('tipo', 'ingreso')->sum('cantidad'), 2);
@@ -31,7 +33,7 @@ class ResumenController extends Controller
         $categorias = Categoria::where('user_id', $user->id)
             ->with(['subcategorias.movimientos' => function ($q) use ($inicio, $fin) {
                 $q->where('tipo', 'gasto')
-                    ->whereBetween('created_at', [$inicio, $fin]);
+                    ->whereBetween('fecha', [$inicio, $fin]);
             }])
             ->get();
 
@@ -48,7 +50,7 @@ class ResumenController extends Controller
 
         $gastosAgrupados = $movimientos
             ->where('tipo', 'gasto')
-            ->groupBy(fn($m) => $m->created_at->format('d'))
+            ->groupBy(fn($m) => Carbon::parse($m->fecha)->format('d'))
             ->map(fn($items) => round($items->sum('cantidad'), 2));
 
         $totalDias = $inicio->daysInMonth;
@@ -68,10 +70,10 @@ class ResumenController extends Controller
 
         $gastosPorSemana = Movimiento::where('user_id', $user->id)
             ->where('tipo', 'gasto')
-            ->whereBetween('created_at', [$inicio, $fin])
+            ->whereBetween('fecha', [$inicio, $fin])
             ->get()
             ->groupBy(function ($mov) {
-                return floor(($mov->created_at->day - 1) / 7) + 1;
+                return floor((Carbon::parse($mov->fecha)->day - 1) / 7) + 1;
             })
             ->map(function ($items, $semana) {
                 return [
@@ -82,9 +84,9 @@ class ResumenController extends Controller
             ->values();
 
         $gastosPorAnioRaw = Movimiento::where('user_id', $user->id)
-            ->whereYear('created_at', $anio)
+            ->whereYear('fecha', $anio)
             ->where('tipo', 'gasto')
-            ->selectRaw('MONTH(created_at) as mes, SUM(cantidad) as total')
+            ->selectRaw('MONTH(fecha) as mes, SUM(cantidad) as total')
             ->groupBy('mes')
             ->pluck('total', 'mes');
 

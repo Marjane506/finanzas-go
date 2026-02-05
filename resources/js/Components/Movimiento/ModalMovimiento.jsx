@@ -24,6 +24,7 @@ export default function ModalMovimiento({ open, onClose, subcategoriaId }) {
                     router.reload({ only: ["sub"] });
                     setCantidad("");
                     setTipo("gasto");
+                    setFecha(new Date().toISOString().slice(0, 10));
                     onClose();
                 },
             },

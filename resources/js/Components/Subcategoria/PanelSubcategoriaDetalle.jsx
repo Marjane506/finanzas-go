@@ -37,20 +37,9 @@ export default function PanelSubcategoriaDetalle({ sub }) {
         });
     };
 
-    const hoy = new Date();
-    const mesActual = hoy.getMonth(); // 0–11
-    const añoActual = hoy.getFullYear();
+    const movimientosMes = sub.movimientos || [];
 
-    const movimientosMes = (sub.movimientos || []).filter((m) => {
-        const fecha = new Date(m.created_at);
-        return (
-            fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual
-        );
-    });
-
-    movimientosMes.sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-    );
+    movimientosMes.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
     const gastos = movimientosMes.filter((m) => m.tipo === "gasto");
     const ingresos = movimientosMes.filter((m) => m.tipo === "ingreso");
@@ -58,7 +47,7 @@ export default function PanelSubcategoriaDetalle({ sub }) {
     const totalGastos = gastos.reduce((sum, m) => sum + Number(m.cantidad), 0);
     const totalIngresos = ingresos.reduce(
         (sum, m) => sum + Number(m.cantidad),
-        0
+        0,
     );
     const balance = totalIngresos - totalGastos;
 
@@ -112,9 +101,7 @@ export default function PanelSubcategoriaDetalle({ sub }) {
 
                             <div className="flex items-center gap-3">
                                 <span className="text-gray-500 text-sm">
-                                    {new Date(
-                                        mov.created_at
-                                    ).toLocaleDateString()}
+                                    {new Date(mov.fecha).toLocaleDateString()}
                                 </span>
 
                                 <button
@@ -152,9 +139,7 @@ export default function PanelSubcategoriaDetalle({ sub }) {
 
                             <div className="flex items-center gap-3">
                                 <span className="text-gray-500 text-sm">
-                                    {new Date(
-                                        mov.created_at
-                                    ).toLocaleDateString()}
+                                    {new Date(mov.fecha).toLocaleDateString()}
                                 </span>
 
                                 <button

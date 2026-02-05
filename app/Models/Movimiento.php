@@ -11,10 +11,12 @@ class Movimiento extends Model
         'subcategoria_id',
         'tipo',
         'cantidad',
+        'fecha',
     ];
 
     protected $casts = [
         'cantidad' => 'decimal:2',
+        'fecha' => 'date',
     ];
 
     public function subcategoria()
